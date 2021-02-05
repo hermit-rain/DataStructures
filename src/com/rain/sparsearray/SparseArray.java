@@ -25,6 +25,7 @@ public class SparseArray {
         System.out.println("原始的二维数组为：");
         for (int i = 0; i < chessArr1.length; i++) {
             for (int j = 0; j < chessArr1.length; j++) {
+                //格式化输出数组
                 System.out.printf("%d\t", chessArr1[i][j]);
             }
             System.out.println();
