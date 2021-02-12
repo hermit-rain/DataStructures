@@ -1,5 +1,7 @@
 package com.rain.linkedlist;
 
+import java.util.Stack;
+
 /**
  * 使用带 head 头的单向链表实现 –英雄联盟英雄排行管理，完成对英雄人物的增删改查操作
  *
@@ -57,6 +59,22 @@ public class SingleLinkedListTest {
         //显示一手
         singleLinkedList.list();
 
+        //测试单链表的有效节点个数
+        System.out.println("单链表的有效节点个数为"+getLength(singleLinkedList.getHead()));
+
+        //测试返回倒数第k个节点
+        HeroNode res = findLastIndexNode(singleLinkedList.getHead(),2);
+        System.out.println("倒数第k个节点为"+res);
+
+        //测试链表反转功能
+        System.out.println("反转单向链表为~");
+        reverseList(singleLinkedList.getHead());
+        singleLinkedList.list();
+
+        //测试逆序打印
+        System.out.println("逆序打印单向链表,结果并不改变单链表的结构");
+        reversePrint(singleLinkedList.getHead());
+
         //测试修改节点的代码
         HeroNode newHeroNode = new HeroNode(2,"圣枪游侠","双抢奥巴马");
         singleLinkedList.update(newHeroNode);
@@ -69,6 +87,106 @@ public class SingleLinkedListTest {
         singleLinkedList.list();
 
     }
+
+    /**
+     * 获取单链表的节点个数（如果是带头节点，不需要统计头节点）
+     * head 链表的头节点
+     * 返回就是链表的有效的节点个数
+     */
+    public static int  getLength(HeroNode head) {
+        if (head.next == null) {
+            return 0;
+        }
+        int length = 0;
+        //定义一个辅助变量，这里我们没有统计头节点
+        HeroNode cur = head.next;
+        while (cur != null) {
+            length++;
+            cur = cur.next;
+        }
+        return length;
+    }
+
+    /**
+     * 查找单链表中倒数第k个节点 [新浪]
+     * 编写一个方法，接受head节点，同时节点后index（index表示倒数第几个数）
+     * 1.把链表从头到尾遍历，得到链表的总长度 getLength
+     * 2.得到size后，我们从链表的第一个开始遍历（size - index）个即为结果
+     * 3.如果找到了即返回该节点，否则返回null
+     */
+    public static HeroNode findLastIndexNode(HeroNode head, int index) {
+        //判断链表是否为空，返回null
+        if(head.next == null) {
+            return null;
+        }
+        //第一次遍历得到链表的长度
+        int size = getLength(head);
+        //第二次遍历 size - index 位置，即是我们倒数的第k个节点
+        //先做一次index的校验
+        if (index <= 0 ||  index > size) {
+            return null;
+        }
+        //定义一个辅助变量，for循环定位到倒数的index
+        HeroNode cur = head.next;
+        for (int i = 0; i < size - index; i++) {
+            cur = cur.next;
+        }
+        return cur;
+    }
+
+    /**
+     * 单链表的反转[腾讯]
+     * 头插法
+     * 1.先定义一个节点reverseHead = new HeroNode();
+     * 2.从头到尾遍历原来的链表，每遍历一个节点，就将其取出，并放到reverseHead的最前端
+     * 3.原来的链表的 head.next = reverseHead.next
+     */
+    public static void reverseList(HeroNode head) {
+        //如果链表为空或者只有一个节点则无需反转，直接返回
+        if (head.next == null || head.next.next == null) {
+            return;
+        }
+        //定义一个辅助指针（变量）， 帮助遍历原来的了链表
+        HeroNode cur = head.next;
+        HeroNode next = null;   //指向cur的下一个节点
+        HeroNode reverseHead = new HeroNode(0,"","");
+
+        //遍历原来的链表，每遍历一个节点，就将其取出，并放在新的链表reverseHead 的最前端
+        while (cur != null) {
+            next = cur.next;
+            //第一次循环将cur的next域置为空，之后循环将reverseHead的节点连接到cur节点上
+            cur.next = reverseHead.next;
+            reverseHead.next = cur; //将cur连接到新的链表头上
+            cur = next; //让cur后移
+        }
+        //将head.next 指向reverseHead.next,即将链表头替换为原表头
+        head.next = reverseHead.next;
+    }
+
+
+    /**
+     * 从尾到头打印单链表 [百度]
+     * 方式一：先将单链表反转操作，然后遍历即可；弊端：破坏原来的单链表的结构
+     * 方式二：可以通过 栈 数据结构，将各个节点压入栈中，然后再pop出栈即可
+     */
+    public static void reversePrint(HeroNode head) {
+        if (head.next == null) {
+            return;
+        }
+        //创建一个栈，将各个节点压入栈
+        Stack<HeroNode> stack = new Stack<HeroNode>();
+        HeroNode cur = head.next;
+        //将链表的所以节点压入栈
+        while (cur != null) {
+            stack.push(cur);
+            cur = cur.next;
+        }
+        //将栈中的节点进行打印，pop出栈
+        while (stack.size() > 0) {
+            System.out.println(stack.pop());
+        }
+    }
+
 }
 
 //定义一个SingleLinkedList 管理英雄
