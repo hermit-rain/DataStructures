@@ -1,7 +1,7 @@
 package com.rain.stack;
 
 /**
- * 栈实现综合计算器
+ * 栈实现综合计算器(中缀表达式)
  * 计算表达式
  *
  * 定义一个数栈 numStack 存放数，一个符号栈 operStack 存放运算符
