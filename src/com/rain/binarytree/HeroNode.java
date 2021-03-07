@@ -1,4 +1,4 @@
-package com.rain.binarysorttree;
+package com.rain.binarytree;
 
 /**
  * 用于创建二叉树的 HeroNode节点
@@ -189,6 +189,44 @@ public class HeroNode {
         return resNode;
 
     }
+
+
+    /**
+     * 二叉树删除节点
+     * 规定
+     * 1.如果待删除的节点是叶子节点，则删除节点
+     * 2.如果删除的节点是非叶子节点 则删除该子树
+     * 思路
+     * 首先考虑如果树是空树root 如果只有一个 root 节点 则等价于将该二叉树置空
+     * 1.因为当前的二叉树是单向的 所以我们只能判断当前的节点的子节点是否是待删除节点
+     * 而不能判断当前节点是否为待删除节点 ===>类似于单向链表的删除
+     * 2.如果当前节点的左子节点不为空 并且该左子节点就是要待删除的节点 == > this.left = null 并且返回 (结束递归删除)
+     * 3.如果当前节点的右子节点不为空 并且 右子节点就是待删除的节点 ==> this.right = null 并且返回
+     * 4.如果第二步和第三步 都没有删除节点 那么我们就需要向左子树进行递归删除
+     * 5.如果第四步也没有删除 则应该向右子树进行递归删除
+     *
+     * @param no
+     */
+    public void delNode(int no) {
+
+        if (this.left != null && this.left.no == no) {
+            this.left = null;
+            return;
+        }
+        if (this.right != null && this.right.no == no) {
+            this.right = null;
+            return;
+        }
+        if (this.left != null) {
+            this.left.delNode(no);
+        }
+        if (this.right != null) {
+            this.right.delNode(no);
+        }
+
+    }
+
+
 
 
 }

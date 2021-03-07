@@ -1,8 +1,8 @@
-package com.rain.binarysorttree;
+package com.rain.binarytree;
 
 /**
- * 二叉树遍历应用实例  ===> 前序,中序,后序
- * 定义一个 BinaryTree 二叉树
+ * 二叉树
+ * 涉及 二叉树的 创建 遍历 查找 删除
  * <p>
  * 1) 前序遍历: 先输出父节点，再遍历左子树和右子树
  * 2) 中序遍历: 先遍历左子树，再输出父节点，再遍历右子树
@@ -82,6 +82,21 @@ public class BinaryTree {
             return root.postOrderSearch(no);
         } else {
             return null;
+        }
+    }
+
+    //删除节点
+    public void delNode(int no) {
+        if (root != null) {
+            //如果只有一个root 节点那么这里就直接判断 root 是否为待删除的节点
+            if (root.getNo() == no) {
+                root = null;
+            } else {
+                //递归删除
+                root.delNode(no);
+            }
+        } else {
+            System.out.println("空树 不能删除啊亲~");
         }
     }
 

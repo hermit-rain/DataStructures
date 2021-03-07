@@ -1,4 +1,4 @@
-package com.rain.binarysorttree;
+package com.rain.binarytree;
 
 /**
  * 用于测试二叉树
@@ -48,7 +48,18 @@ public class ApplicationTest {
         HeroNode resNode2 = binaryTree.postOrderSearch(5);
         System.out.println(resNode2);
 
+        //测试删除节点
+        System.out.println("删除前 前序遍历==>");
+        binaryTree.perOrder();
+        binaryTree.delNode(5);
+        System.out.println("删除后 前序遍历==>");
+        binaryTree.perOrder();
 
+        //测试顺序存储二叉树-前序遍历实现
+        int[] arr = {1, 2, 3, 4, 5, 6, 7};
+        //创建一个 ArrayBinaryTree
+        ArrBinaryTree arrBinaryTree = new ArrBinaryTree(arr);
+        arrBinaryTree.preOrder(0); //1 2 4 5 3 6 7
 
 
     }
