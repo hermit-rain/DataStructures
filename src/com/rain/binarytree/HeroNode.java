@@ -12,9 +12,34 @@ public class HeroNode {
     private HeroNode left; //默认值为 null
     private HeroNode right; //默认值为 null
 
+    //补充说明
+    //因为线索二叉树的左右节点既可以是子树又可以是前驱节点或者后继节
+    //所以我们定义两个新的节点来区分左右指针的类型
+    // 0 == > 子树  1 ==> 前驱或者后继节点
+    private int leftTye;
+    private int rightType;
+
+
     public HeroNode(int no, String name) {
         this.name = name;
         this.no = no;
+    }
+
+
+    public int getLeftTye() {
+        return leftTye;
+    }
+
+    public void setLeftTye(int leftTye) {
+        this.leftTye = leftTye;
+    }
+
+    public int getRightType() {
+        return rightType;
+    }
+
+    public void setRightType(int rightType) {
+        this.rightType = rightType;
     }
 
     public int getNo() {
