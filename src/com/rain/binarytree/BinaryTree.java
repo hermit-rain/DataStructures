@@ -23,7 +23,7 @@ public class BinaryTree {
 
     private HeroNode root; //根节点
 
-    //定义构造器
+
     public void setRoot(HeroNode root) {
         this.root = root;
     }

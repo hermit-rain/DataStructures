@@ -84,7 +84,8 @@ public class HeroNode {
 
     //前序遍历
     public void perOrder() {
-        System.out.println(this); //先输出父节点
+        //先输出父节点
+        System.out.println(this);
         //递归向左子树前序遍历
         if (this.left != null) {
             this.left.perOrder();
