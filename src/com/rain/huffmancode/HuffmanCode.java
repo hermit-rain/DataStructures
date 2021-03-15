@@ -1,6 +1,13 @@
 package com.rain.huffmancode;
 
 
+import com.sun.tools.javac.Main;
+import javafx.beans.property.ReadOnlyBooleanProperty;
+
+import javax.imageio.plugins.tiff.GeoTIFFTagSet;
+import javax.naming.NoInitialContextException;
+import javax.print.attribute.standard.NumberOfInterveningJobs;
+import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -76,7 +83,7 @@ public class HuffmanCode {
     /**
      * 通过 list 创建赫夫曼树
      *
-     * @param nodes 接受的 List <Node> 集合
+     * @param nodes 接收的 List <Node> 集合
      * @return
      */
     public Node createHuffmanTree(List<Node> nodes) {
@@ -100,6 +107,93 @@ public class HuffmanCode {
         return nodes.get(0);
 
     }
+
+
+    //获取每个叶子节点对应的赫夫曼编码
+    //赫夫曼编码存放到 Map<Byte, String> 中 ===>  {32=01, 97=100, 100=11000, 117=11001, 101=1110 ...}
+    static Map<Byte, String> huffmanCodes = new HashMap<>();
+    //在生成赫夫曼编码遍历的过程中需要不断的拼接字符 ==> 拼接 0 1 ..
+    static StringBuilder stringBuilder = new StringBuilder();
+
+    /**
+     * 将传入的 node 节点的所有叶子节点的赫夫曼编码得到 并存放到 huffmanCodes 集合中
+     *
+     * @param node          传入节点
+     * @param code          路径 左子节点 0 右 子节点 1
+     * @param stringBuilder 用于拼接路径
+     */
+    public void getCodes(Node node, String code, StringBuilder stringBuilder) {
+
+        StringBuilder stringBuilder2 = new StringBuilder(stringBuilder);
+        //将code (0 1) 加入到stringBuilder2 中
+        stringBuilder2.append(code);
+        if (node != null) {
+            //判断当前节点是叶子节点还是非叶子节点
+            if (node.data == null) {
+                //非叶子节点即 向左右进行递归处理 ==> 逐渐添 0 1
+                getCodes(node.left, "0", stringBuilder2);
+                getCodes(node.right, "1", stringBuilder2);
+            } else {
+                //如果是一个叶子节点
+                huffmanCodes.put(node.data, stringBuilder2.toString());
+            }
+        }
+    }
+
+    //重载 getCodes方法
+    public Map<Byte, String> getCodes(Node root) {
+        if (root == null) {
+            return null;
+        }
+        //处理root的左子树
+        getCodes(root.left, "0", stringBuilder);
+        getCodes(root.right, "1", stringBuilder);
+        return huffmanCodes;
+    }
+
+
+    /**
+     * 通过生成好的 赫夫曼编码 Map<Byte, String> 将原始的 byte[] 进行压缩
+     * 将原始的字符按照 赫夫曼编码 方式进行编码
+     * 并将已经通过编码后的整个 0 1 字符串 按照每 8 bit 一组 转换成对应的十进制的形式 并存储到数组中
+     * huffmanCodeBytes[0] =  10101000(补码) => byte  [推导  10101000=> 10101000 - 1 => 10100111(反码)=> 11011000= -88 ]
+     * huffmanCodeBytes[1] = -88
+     *
+     * @param bytes        原始字符串对应的 byte[]
+     * @param huffmanCodes 生成的赫夫曼编码 map
+     * @return 返回经过赫夫曼编码处理后的 byte[]
+     */
+    public byte[] zip(byte[] bytes, Map<Byte, String> huffmanCodes) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        //遍历 byte 数组==> 字符串的赫夫曼编码
+        for (byte b : bytes) {
+            stringBuilder.append(huffmanCodes.get(b));
+        }
+
+        //获取要返回十进制数组的长度
+        int len = (stringBuilder.length() + 7) / 8;
+        int index = 0; //用于记录 byte 的编号
+        //创建压缩后的 byte 数组
+        byte[] huffmanCodeBytes = new byte[len];
+        //每 8 位一组进行 转换
+        for (int i = 0; i < stringBuilder.length(); i += 8) {
+            String strByte;
+            if (i + 8 > stringBuilder.length()) {
+                //如果不够 8 位
+                strByte = stringBuilder.substring(i);
+            } else {
+                strByte = stringBuilder.substring(i, i + 8);
+            }
+            huffmanCodeBytes[index] = (byte) Integer.parseInt(strByte, 2);
+            index++;
+        }
+        return huffmanCodeBytes;
+
+    }
+
+
+
 
 
 }
