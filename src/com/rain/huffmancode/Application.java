@@ -34,9 +34,11 @@ public class Application {
         byte[] huffmanCodeBytes = huffmanCode.zip(contentBytes, huffmanCodes);
         System.out.println("压缩后得到的十进制数组为" + Arrays.toString(huffmanCodeBytes));
 
+        //测试解压字符串
+        byte[] sourceBytes = huffmanCode.decode(huffmanCodes, huffmanCodeBytes);
+        System.out.println("原始的字符串" + new String(sourceBytes));
 
     }
-
 
 
 }

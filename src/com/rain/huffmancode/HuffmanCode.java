@@ -1,13 +1,5 @@
 package com.rain.huffmancode;
 
-
-import com.sun.tools.javac.Main;
-import javafx.beans.property.ReadOnlyBooleanProperty;
-
-import javax.imageio.plugins.tiff.GeoTIFFTagSet;
-import javax.naming.NoInitialContextException;
-import javax.print.attribute.standard.NumberOfInterveningJobs;
-import javax.xml.crypto.Data;
 import java.util.*;
 
 /**
@@ -191,6 +183,86 @@ public class HuffmanCode {
         return huffmanCodeBytes;
 
     }
+
+    /**
+     * 将一个 byte 字节 转换成一个二进制的字符串
+     *
+     * @param flag 标志是否需要进行补高位 true ==> 需要补高位 false ==> 不需要补高位  如果是最后一个字节 无需补高位
+     * @param b    传入的 byte
+     * @return byte字节 对应的二进制字符
+     */
+    public String byteToBitString(boolean flag, byte b) {
+        //定义一个变量来保存byte
+        int temp = b;
+        if (flag) {
+            temp |= 256;
+        }
+        //返回 temp 对应的二进制补码
+        String str = Integer.toBinaryString(temp);
+        if (flag) {
+            return str.substring(str.length() - 8);
+        } else {
+            return str;
+        }
+
+    }
+
+
+    /**
+     * 对经过赫夫曼编码进行压缩的数据进行解压
+     * 1.首先将 huffmanCodeBytes [-88, -65, -56, -65, -56, -65...] 转换成赫夫曼编码对应的二进制编码 "1010100010111..."
+     * 2.通过 赫夫曼编码字符表Map<Byte, String> 将得到的二进制编码字符 转换成 对应的字符串 "i like like like java do you like a java"
+     *
+     * @param huffmanCodes 赫夫曼编码表 Map<Byte, String>
+     * @param huffmanBytes 赫夫曼编码压缩得到的字节数组 Byte {-88, ...}
+     * @return 压缩前字符串对应的数组
+     */
+    public byte[] decode(Map<Byte, String> huffmanCodes, byte[] huffmanBytes) {
+
+        //先得到 huffmanBytes 对应的二进制的字符串
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < huffmanBytes.length; i++) {
+            byte b = huffmanBytes[i];
+            //判断是否为最后一个字符
+            boolean flag = (i == huffmanBytes.length - 1);
+            stringBuilder.append(byteToBitString(!flag, b));
+        }
+        //将 赫夫曼编码表的 key - value 对进行调换 == > value - key
+        Map<String, Byte> map = new HashMap<>();
+        for (Map.Entry<Byte, String> entry : huffmanCodes.entrySet()) {
+            map.put(entry.getValue(), entry.getKey());
+        }
+        //创建存储 byte 的集合
+        List<Byte> list = new ArrayList<>();
+        //i ==> 相当于索引 扫描 stringBuilder
+        for (int i = 0; i < stringBuilder.length(); ) {
+            int count = 1;
+            boolean flag = true;
+            Byte b = null;
+
+            while (flag) {
+                //递增的取出 key
+                String key = stringBuilder.substring(i, i + count);
+                b = map.get(key);
+                if (b == null) { //没有匹配到
+                    count++;
+                } else {
+                    flag = false;
+                }
+            }
+            list.add(b);
+            i += count;
+        }
+        //退出for 之后 list ==> "i like like like java do you like a java"
+        //把 list 中的数据放入到 byte[]中
+        byte[] b = new byte[list.size()];
+        for (int i = 0; i < b.length; i++) {
+            b[i] = list.get(i);
+        }
+        return b;
+
+    }
+
 
 
 
