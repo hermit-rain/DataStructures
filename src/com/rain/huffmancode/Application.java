@@ -38,6 +38,25 @@ public class Application {
         byte[] sourceBytes = huffmanCode.decode(huffmanCodes, huffmanCodeBytes);
         System.out.println("原始的字符串" + new String(sourceBytes));
 
+//        //测试整合后的方法
+//        byte[] sourceBytes1 = huffmanCode.huffmanZip(contentBytes);
+//        System.out.println(Arrays.toString(sourceBytes1));
+
+//        //测试压缩文件
+//        String srcFile = "C:\\Users\\hermi\\Desktop\\bing.jpg";
+//        String dstFile = "C:\\Users\\hermi\\Desktop\\bing.zip";
+//
+//        huffmanCode.zipFile(srcFile, dstFile);
+//        System.out.println("压缩文件成功 亲");
+
+//        //测试文件解压
+//        String zipFile = "C:\\Users\\hermi\\Desktop\\bing.zip";
+//        String dstFile2 = "C:\\Users\\hermi\\Desktop\\bing.jpg";
+//
+//        huffmanCode.unZipFile(zipFile, dstFile2);
+//        System.out.println("解压成功~");
+
+
     }
 
 
