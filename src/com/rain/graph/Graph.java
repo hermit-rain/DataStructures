@@ -2,6 +2,7 @@ package com.rain.graph;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 
 
 //描述图
@@ -18,10 +19,9 @@ public class Graph {
     public static void main(String[] args) {
 
         //测试
-        int n = 5;
-        String[] Vertexs = {"A", "B", "C" ,"D", "E"};
         //创建图对象
-        Graph graph = new Graph(n);
+        Graph graph = new Graph(5);
+        String[] Vertexs = {"A", "B", "C" ,"D", "E"};
         //循环添加顶点
         for (String vertex : Vertexs) {
             graph.insertVertex(vertex);
@@ -32,6 +32,7 @@ public class Graph {
         graph.insertEdge(1, 2, 1);
         graph.insertEdge(1, 3, 1);
         graph.insertEdge(1, 4, 1);
+
 
         //显示图的邻接矩阵
         graph.showGraph();
@@ -48,6 +49,11 @@ public class Graph {
         //深度优先搜索
         System.out.println("深度优先搜索 ==> ");
         graph.dfs();
+
+        //广度优先搜索
+        System.out.println("广度优先搜索 ==> ");
+        graph.bfs();
+
 
     }
 
@@ -138,7 +144,7 @@ public class Graph {
     }
 
     /**
-     * 深度优先搜索
+     * 对一个顶点进行深度优先搜索
      *
      * @param isVisited 传入一个描述顶点是否已经被访问过的数组
      * @param i         传入遍历的起始顶点
@@ -169,6 +175,52 @@ public class Graph {
             }
         }
 
+    }
+
+    /**
+     * 对图的一个顶点进行广度优先搜索
+     *
+     * @param isVisited 传入一个描述节点访问情况的数组
+     * @param i         起始遍历顶点的下标
+     */
+    private void bfs(boolean[] isVisited, int i) {
+
+        int u; //表示队列头顶点对应的下标
+        int w; //邻接顶点w
+        //定义队列 用于记录顶点被访问的顺序
+        LinkedList<Integer> queue = new LinkedList<>();
+        //访问顶点
+        System.out.printf(getValueByIndex(i) + "==>");
+        //标记已经访问
+        isVisited[i] = true;
+        //将顶点入队列
+        queue.addLast(i);
+
+        while (!queue.isEmpty()) {
+            //得到队列头顶点的下标
+            u = queue.removeFirst();
+            //得到第一个邻接顶点的下标
+            w = getFirstNeighbor(u);
+            while (!isVisited[w]) {
+                System.out.printf(getValueByIndex(w) + "==>");
+                isVisited[w] = true;
+                queue.addLast(w);
+            }
+            //以u 为前驱顶点 找 w 的下一个邻接顶点
+            w = getNextNeighbor(u, w);
+        }
+
+    }
+
+
+    //重载 遍历图的所有顶点 ==> 有非连接图的情况
+    public void bfs() {
+        isVisited = new boolean[vertexList.size()];
+        for (int i = 0; i < getNumOfVertex(); i++) {
+            if (!isVisited[i]) {
+                bfs(isVisited, i);
+            }
+        }
     }
 
 
